@@ -1,0 +1,24 @@
+{
+  "name": "kanga",
+  "version": "1.0.0",
+  "description": "A fun API for Swahili phrases",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index"
+  },
+  "author": "Cuthbert Nguruka",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^4.7.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-validator": "^6.14.2",
+    "jsonwebtoken": "^8.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20",
+    "prisma": "^4.7.1"
+  }
+}

@@ -7,41 +7,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model phrase {
+model Phrase {
   id         Int          @id @default(autoincrement())
   text       String       @db.VarChar(255)
   author     Int
-  user       user         @relation(fields: [author], references: [id], onUpdate: Restrict, map: "authorId")
-  phrasetags phrasetags[]
+  user       User         @relation(fields: [author], references: [id], onUpdate: Restrict, map: "authorId")
+  phrasetags PhraseTags[]
 
   @@index([author], map: "authorId")
+  @@map("phrase")
 }
 
-model phrasetags {
+model PhraseTags {
   phraseId Int
   tagId    Int
-  phrase   phrase @relation(fields: [phraseId], references: [id], onUpdate: Restrict, map: "phraseId")
-  tag      tag    @relation(fields: [tagId], references: [id], onUpdate: Restrict, map: "tagId")
+  phrase   Phrase @relation(fields: [phraseId], references: [id], onUpdate: Restrict, map: "phraseId")
+  tag      Tag    @relation(fields: [tagId], references: [id], onUpdate: Restrict, map: "tagId")
 
   @@id([phraseId, tagId])
   @@index([phraseId], map: "phraseId")
   @@index([tagId], map: "tagId")
+  @@map("phrasetags")
 }
 
-model tag {
+model Tag {
   id         Int          @id @default(autoincrement())
   name       String       @db.VarChar(50)
-  phrasetags phrasetags[]
+  phrasetags PhraseTags[]
 
   @@index([name], map: "tagName")
+  @@map("tag")
 }
 
-model user {
+model User {
   id        Int      @id @default(autoincrement())
   firstName String   @db.VarChar(50)
   lastName  String?  @db.VarChar(50)
   email     String   @db.VarChar(50)
   password  String   @db.VarChar(255)
   isAdmin   Boolean
-  phrase    phrase[]
+  phrase    Phrase[]
+
+  @@map("user")
 }

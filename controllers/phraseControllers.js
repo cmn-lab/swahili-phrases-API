@@ -1,8 +1,5 @@
 const prisma = require('../prisma/index');
 
-// dummy data
-const phrases = require("../models/phraseModel");
-
 exports.getPhrases = async (req, res, next) => {
   // Get all phrases
   const phrases = await prisma.phrase.findMany();

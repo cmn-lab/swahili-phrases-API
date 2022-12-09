@@ -1,28 +1,47 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-model Author {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  email    String   @unique
-  password String
-  phrases  Phrase[]
+model phrase {
+  id         Int          @id @default(autoincrement())
+  text       String       @db.VarChar(255)
+  author     Int
+  user       user         @relation(fields: [author], references: [id], onUpdate: Restrict, map: "authorId")
+  phrasetags phrasetags[]
+
+  @@index([author], map: "authorId")
 }
 
-model Phrase {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  author   Author   @relation(fields: [authorId], references: [id])
-  authorId String   @db.ObjectId
-  phrase   String
-  tags     String[]
-  length   Int
+model phrasetags {
+  phraseId Int
+  tagId    Int
+  phrase   phrase @relation(fields: [phraseId], references: [id], onUpdate: Restrict, map: "phraseId")
+  tag      tag    @relation(fields: [tagId], references: [id], onUpdate: Restrict, map: "tagId")
+
+  @@id([phraseId, tagId])
+  @@index([phraseId], map: "phraseId")
+  @@index([tagId], map: "tagId")
+}
+
+model tag {
+  id         Int          @id @default(autoincrement())
+  name       String       @db.VarChar(50)
+  phrasetags phrasetags[]
+
+  @@index([name], map: "tagName")
+}
+
+model user {
+  id        Int      @id @default(autoincrement())
+  firstName String   @db.VarChar(50)
+  lastName  String?  @db.VarChar(50)
+  email     String   @db.VarChar(50)
+  password  String   @db.VarChar(255)
+  isAdmin   Boolean
+  phrase    phrase[]
 }

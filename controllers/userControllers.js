@@ -1,5 +1,4 @@
 const prisma = require('../prisma/index');
-const { use } = require('../routes/phraseRoutes');
 
 exports.createUser = async (req, res, next) => {
     // Create new user

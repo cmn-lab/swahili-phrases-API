@@ -41,5 +41,5 @@ app.use((err, req, res, next) => {
 
 // Listening for connections
 app.listen(PORT, () => {
-    console.log(`Unyama upo kwenye PORT ${PORT}`)
+    console.log(`Unyama upo kwenye PORT ${PORT}`);
 });

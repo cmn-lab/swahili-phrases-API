@@ -7,16 +7,22 @@ exports.getTags = async (req, res, next) => {
 };
 
 exports.createTag = async (req, res, next) => {
-    const errors = validationResult(req);
+  // Check for errors
+  const errors = validationResult(req);
 
-    !errors.isEmpty() && res.status(400).json({ errors: errors.array() });
+  !errors.isEmpty() && res.status(400).json({ errors: errors.array() });
 
-    // create new tag
-    try {
-      const { name } = req.body;
-      console.log(`adding ${name}`);
-      res.status(200).json({ message: `${name} added` });
-    } catch (error) {
-      next(error);
-    }
-  };
+  // Create new tag
+  try {
+    const { name } = req.body;
+    const data = { name };
+    const result = await prisma.tag.create({ data });
+    console.log(result);
+    result &&
+      res
+        .status(200)
+        .json({ message: "SUCCESS", resultCode: 0, result: result });
+  } catch (error) {
+    next(error);
+  }
+};

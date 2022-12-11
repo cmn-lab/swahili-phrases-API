@@ -21,8 +21,8 @@ const VERSION = "v1"; // API version
 const ROOT = `/api/${VERSION}`; // Root endpoint
 
 // Redirect Endpoints
-app.use(`${ROOT}/phrase`, phraseRoutes);
-app.use(`${ROOT}/tag`, tagRoutes);
+app.use(`${ROOT}/phrases`, phraseRoutes);
+app.use(`${ROOT}/tags`, tagRoutes);
 app.all("*", (req, res, next) => {
   const err = new Error("URL not found!");
   err.statusCode = 404;

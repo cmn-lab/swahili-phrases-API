@@ -1,11 +1,6 @@
 const prisma = require("../prisma/index");
 const { validationResult } = require("express-validator");
 
-exports.getTags = async (req, res, next) => {
-  // Get all tags
-  console.log("getting all tags");
-};
-
 exports.createTag = async (req, res, next) => {
   // Check for errors
   const errors = validationResult(req);
@@ -26,3 +21,9 @@ exports.createTag = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getTags = async (req, res, next) => {
+  // Get all tags
+  console.log("getting all tags");
+};
+

@@ -25,17 +25,52 @@ exports.createTag = async (req, res, next) => {
 };
 
 exports.getTags = async (req, res, next) => {
-  // Get all tags
   try {
-    const result = await prisma.tag.findMany();
+    // Get all tags by filters
+    const params = req.query;
 
-    if (!result) {
-      res.status(404).json({ errorCode: 1020, message: "Tags not found" });
+    if (Object.keys(params).length === 0 && params.constructor === Object) {
+      // No params, Get All Tags
+      const result = await prisma.tag.findMany();
+
+      if (!result) {
+        res.status(404).json({ errorCode: 1020, message: "Tags not found" });
+      } else {
+        res.status(200).json(result);
+      }
     } else {
-      res.status(200).json(result);
+      // Params Exist, Get Filtered Tags
+      const { query } = params;
+      const queryTags = JSON.parse(query);
+
+      try {
+        const result = await prisma.tag.findMany({
+          where: {
+            OR: [
+              {
+                name: {
+                  equals: queryTags.tags[0],
+                },
+              },
+              {
+                name: {
+                  equals: queryTags.tags[1],
+                },
+              },
+            ],
+          },
+        });
+        result && res.status(200).json(result);
+      } catch (error) {
+        res.status(404).json({ errorCode: 1020, message: "Tags not found" });
+        next(error);
+      }
     }
   } catch (error) {
     next(error);
   }
 };
 
+exports.getTagsByName = async (req, res, next) => {
+  console.log(`Getting ${req.params}`);
+};

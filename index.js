@@ -9,6 +9,7 @@ const PORT = 8080;
 // routes
 const phraseRoutes = require("./routes/phraseRoutes");
 const tagRoutes = require("./routes/tagRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 // registering middleware
 app.use(cors());
@@ -23,6 +24,7 @@ const ROOT = `/api/${VERSION}`; // Root endpoint
 // Redirect Endpoints
 app.use(`${ROOT}/phrases`, phraseRoutes);
 app.use(`${ROOT}/tags`, tagRoutes);
+app.use(`${ROOT}/users`, userRoutes);
 app.all("*", (req, res, next) => {
   const err = new Error("URL not found!");
   err.statusCode = 404;

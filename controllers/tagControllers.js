@@ -70,7 +70,3 @@ exports.getTags = async (req, res, next) => {
     next(error);
   }
 };
-
-exports.getTagsByName = async (req, res, next) => {
-  console.log(`Getting ${req.params}`);
-};

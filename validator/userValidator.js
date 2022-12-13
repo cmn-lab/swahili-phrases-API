@@ -39,10 +39,5 @@ exports.updateUser = [
     .withMessage("Email format not valid")
     .notEmpty()
     .withMessage("Email is required"),
-  check("password")
-    .notEmpty()
-    .withMessage("Password is required")
-    .isLength({ min: 6 })
-    .withMessage("At least 6 characters are required"),
   check("isAdmin").isBoolean().withMessage("Only boolean values allowed"),
 ];

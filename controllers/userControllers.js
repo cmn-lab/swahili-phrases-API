@@ -128,7 +128,45 @@ exports.getUser = async (req, res, next) => {
 
 exports.updateUser = async (req, res, next) => {
     // UPDATE user data
-  const { id } = req.params;
-  const { name, email, password, role } = req.body;
-  //console.log(req.body);
+try {
+    const errors = validationResult(req);
+
+    if(!errors.isEmpty()){
+        res.status(400).json({ errors: errors.array() });
+    }else{
+        const { user_id } = req.params;
+        const { firstName, lastName, email, isAdmin } = req.body;
+        const newData = {
+            firstName, lastName, email, isAdmin
+        };
+        try {
+            const result = await prisma.user.update({
+              where: {
+                id: parseInt(user_id),
+              },
+              data: newData,
+              select: {
+                firstName: true,
+                lastName: true,
+                email: true,
+                isAdmin: true,
+              },
+            });
+            if (result) {
+              res
+                .status(200)
+                .json({ message: "SUCCESS", resultCode: 0, result: result });
+            } else {
+              res
+                .status(400)
+                .json({ errorCode: 1008, message: "Unable to update data." });
+            }
+        } catch (error) {
+            next(error);
+        }
+        
+    }
+} catch (error) {
+	
+}
 };

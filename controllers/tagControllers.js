@@ -26,7 +26,7 @@ exports.createTag = async (req, res, next) => {
 
 exports.getTags = async (req, res, next) => {
   try {
-    // Get all tags by filters
+    // Check Filters in the request
     const params = req.query;
 
     if (Object.keys(params).length === 0 && params.constructor === Object) {

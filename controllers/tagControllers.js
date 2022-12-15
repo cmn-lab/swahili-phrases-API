@@ -1,5 +1,6 @@
 const prisma = require("../prisma/index");
 const { validationResult } = require("express-validator");
+const hashids = require("../hashes/hashIds");
 
 exports.createTag = async (req, res, next) => {
   // Check for errors
@@ -31,12 +32,28 @@ exports.getTags = async (req, res, next) => {
 
     if (Object.keys(params).length === 0 && params.constructor === Object) {
       // No params, Get All Tags
-      const result = await prisma.tag.findMany();
+      const result = await prisma.tag.findMany({
+        select: {
+          id: true,
+          name: true,
+        },
+      });
 
       if (!result) {
         res.status(404).json({ errorCode: 1020, message: "Tags not found" });
       } else {
-        res.status(200).json(result);
+        let formattedResult = [];
+
+        // Format result
+        result.forEach((element) => {
+          const hashedId = hashids.encode(element.id);
+          const formattedObject = {
+            id: hashedId,
+            name: element.name,
+          };
+          formattedResult.push(formattedObject);
+        });
+        res.status(200).json(formattedResult);
       }
     } else {
       // Params Exist, Get Filter Tags
@@ -59,8 +76,28 @@ exports.getTags = async (req, res, next) => {
               },
             ],
           },
+          select: {
+            id: true,
+            name: true,
+          },
         });
-        result && res.status(200).json(result);
+
+        if (!result) {
+          res.status(404).json({ errorCode: 1020, message: "Tags not found" });
+        } else {
+          let formattedResult = [];
+
+          // Format result
+          result.forEach((element) => {
+            const hashedId = hashids.encode(element.id);
+            const formattedObject = {
+              id: hashedId,
+              name: element.name,
+            };
+            formattedResult.push(formattedObject);
+          });
+          res.status(200).json(formattedResult);
+        }
       } catch (error) {
         res.status(404).json({ errorCode: 1020, message: "Tags not found" });
         next(error);

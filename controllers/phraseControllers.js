@@ -89,16 +89,31 @@ exports.getPhrases = async (req, res, next) => {
             select: {
               tag: {
                 select: {
-                  name: true
-                }
-              }
-            }
-          }
+                  name: true,
+                },
+              },
+            },
+          },
         },
       });
 
       if (result) {
-        res.status(200).json({ result: result });
+        let formattedResult = [];
+
+        // Format result
+        result.forEach((element) => {
+          let tagsArray = [];
+          element.phrasetags.forEach(tag => {
+            tagsArray.push(tag.tag.name);
+          });
+          const formattedObject = {
+            phrase: element.text,
+            author: element.user,
+            tags: tagsArray
+          };
+          formattedResult.push(formattedObject);
+        });
+        res.status(200).json(formattedResult);
       } else {
         res.status(404).json({ errorCode: 1020, message: "No Phrase Found" });
       }
@@ -127,17 +142,17 @@ exports.getPhrases = async (req, res, next) => {
                     tag: {
                       name: {
                         equals: queryTags.tags[0],
-                      }
-                    }
+                      },
+                    },
                   },
                   {
                     tag: {
                       name: {
                         equals: queryTags.tags[1],
-                      }
-                    }
-                  }
-                ]
+                      },
+                    },
+                  },
+                ],
               },
               select: {
                 tag: {
@@ -149,11 +164,31 @@ exports.getPhrases = async (req, res, next) => {
             },
           },
         });
-        result && res.status(200).json(result);
+
+      if (result) {
+        let formattedResult = [];
+
+        // Format result
+        result.forEach((element) => {
+          let tagsArray = [];
+          element.phrasetags.forEach((tag) => {
+            tagsArray.push(tag.tag.name);
+          });
+          const formattedObject = {
+            phrase: element.text,
+            author: element.user,
+            tags: tagsArray,
+          };
+          formattedResult.push(formattedObject);
+        });
+        res.status(200).json(formattedResult);
       } else {
+        res.status(404).json({ errorCode: 1020, message: "No Phrase Found" });
+      }      } else {
         // Search for Phrases
         const { text } = params;
-        /// An error occurs here ... FIX IT 
+        /// This feature won't be in production
+        /// An error occurs here ... FIX IT
         const result = await prisma.phrase.findMany({
           where: {
             text: {
@@ -161,11 +196,13 @@ exports.getPhrases = async (req, res, next) => {
             },
           },
         });
-        
-        if(result){
+
+        if (result) {
           res.status(200).json(result);
-        }else{
-          res.status(404).json({ "errorCode": 1020, "message": "Phrase not found"});
+        } else {
+          res
+            .status(404)
+            .json({ errorCode: 1020, message: "Phrase not found" });
         }
       }
     }

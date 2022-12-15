@@ -2,6 +2,7 @@ const prisma = require("../prisma/index");
 const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator");
 const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS);
+const hashids = require("../hashes/hashIds");
 
 exports.createUser = async (req, res, next) => {
   try {
@@ -62,7 +63,25 @@ exports.getUsers = async (req, res, next) => {
             isAdmin: true,
           },
         });
-        res.status(200).json(result);
+        if (!result) {
+          res.status(404).json({ errorCode: 1020, message: "No user found" });
+        } else {
+          let formattedResult = [];
+
+          // Format result
+          result.forEach((element) => {
+            const hashedId = hashids.encode(element.id);
+            const formattedObject = {
+              id: hashedId,
+              firstName: element.firstName,
+              lastName: element.lastName,
+              email: element.email,
+              isAdmin: element.isAdmin,
+            };
+            formattedResult.push(formattedObject);
+          });
+          res.status(200).json(formattedResult);
+        }
       } catch (error) {
         next(error);
       }
@@ -86,7 +105,27 @@ exports.getUsers = async (req, res, next) => {
               isAdmin: true,
             },
           });
-          res.status(200).json(result);
+          if (!result) {
+            res
+              .status(404)
+              .json({ errorCode: 1020, message: "No Admin found" });
+          } else {
+            let formattedResult = [];
+
+            // Format result
+            result.forEach((element) => {
+              const hashedId = hashids.encode(element.id);
+              const formattedObject = {
+                id: hashedId,
+                firstName: element.firstName,
+                lastName: element.lastName,
+                email: element.email,
+                isAdmin: element.isAdmin,
+              };
+              formattedResult.push(formattedObject);
+            });
+            res.status(200).json(formattedResult);
+          }
         } catch (error) {
           next(error);
         }
@@ -105,13 +144,30 @@ exports.getUsers = async (req, res, next) => {
               isAdmin: true,
             },
           });
-          res.status(200).json(result);
+          if (!result) {
+            res.status(404).json({ errorCode: 1020, message: "No user found" });
+          } else {
+            let formattedResult = [];
+
+            // Format result
+            result.forEach((element) => {
+              const hashedId = hashids.encode(element.id);
+              const formattedObject = {
+                id: hashedId,
+                firstName: element.firstName,
+                lastName: element.lastName,
+                email: element.email,
+                isAdmin: element.isAdmin,
+              };
+              formattedResult.push(formattedObject);
+            });
+            res.status(200).json(formattedResult);
+          }
         } catch (error) {
           next(error);
         }
       }
     }
-    res.status(200).json({ message: "ok" });
   } catch (error) {
     next(error);
   }
@@ -121,10 +177,9 @@ exports.getUser = async (req, res, next) => {
   // GET Specific User by ID
   try {
     const { user_id } = req.params;
-    console.log(typeof user_id);
     const result = await prisma.user.findUnique({
       where: {
-        id: parseInt(user_id),
+        id: parseInt(hashids.decode(user_id)),
       },
       select: {
         id: true,
@@ -135,7 +190,16 @@ exports.getUser = async (req, res, next) => {
       },
     });
     if (result) {
-      res.status(200).json({ result });
+      // Format result
+      const hashedId = hashids.encode(result.id);
+      const formattedResult = {
+        id: hashedId,
+        firstName: result.firstName,
+        lastName: result.lastName,
+        email: result.email,
+        isAdmin: result.isAdmin,
+      };
+      res.status(200).json(formattedResult);
     } else {
       res.send(404).json({ errorCode: 1020, message: "User not found" });
     }
@@ -162,7 +226,7 @@ exports.updateUser = async (req, res, next) => {
       try {
         const result = await prisma.user.update({
           where: {
-            id: parseInt(user_id),
+            id: parseInt(hashids.decode(user_id)),
           },
           data: newData,
           select: {

@@ -39,7 +39,7 @@ exports.getTags = async (req, res, next) => {
         res.status(200).json(result);
       }
     } else {
-      // Params Exist, Get Filtered Tags
+      // Params Exist, Get Filter Tags
       const { query } = params;
       const queryTags = JSON.parse(query);
 

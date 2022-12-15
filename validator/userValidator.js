@@ -4,13 +4,13 @@ exports.createUser = [
   check("firstName")
     .notEmpty()
     .withMessage("Firstname is required")
-    .isLength({ min: 4 })
-    .withMessage("At least 4 characters are required"),
+    .isLength({ min: 3 })
+    .withMessage("At least 3 characters are required"),
   check("lastName")
     .notEmpty()
     .withMessage("Lastname is required")
-    .isLength({ min: 4 })
-    .withMessage("At least 4 characters are required"),
+    .isLength({ min: 3 })
+    .withMessage("At least 3 characters are required"),
   check("email")
     .isEmail()
     .withMessage("Email format not valid")
@@ -27,13 +27,13 @@ exports.updateUser = [
   check("firstName")
     .notEmpty()
     .withMessage("Firstname is required")
-    .isLength({ min: 4 })
-    .withMessage("At least 4 characters are required"),
+    .isLength({ min: 3 })
+    .withMessage("At least 3 characters are required"),
   check("lastName")
     .notEmpty()
     .withMessage("Lastname is required")
-    .isLength({ min: 4 })
-    .withMessage("At least 4 characters are required"),
+    .isLength({ min: 3 })
+    .withMessage("At least 3 characters are required"),
   check("email")
     .isEmail()
     .withMessage("Email format not valid")

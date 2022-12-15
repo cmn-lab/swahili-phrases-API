@@ -153,7 +153,7 @@ exports.getPhrases = async (req, res, next) => {
       } else {
         // Search for Phrases
         const { text } = params;
-        
+        /// An error occurs here ... FIX IT 
         const result = await prisma.phrase.findMany({
           where: {
             text: {

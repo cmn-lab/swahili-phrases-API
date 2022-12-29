@@ -4,7 +4,8 @@
   "description": "A fun API for Swahili phrases",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index"
+    "dev": "nodemon index",
+    "devAuth": "nodemon authServer"
   },
   "author": "Cuthbert Nguruka",
   "license": "ISC",

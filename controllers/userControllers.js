@@ -50,6 +50,7 @@ exports.createUser = async (req, res, next) => {
 exports.getUsers = async (req, res, next) => {
   try {
     const params = req.query;
+    console.log(req.user)
 
     if (Object.keys(params).length === 0 && params.constructor === Object) {
       // No params, GET All Users

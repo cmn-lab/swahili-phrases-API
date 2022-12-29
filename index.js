@@ -4,7 +4,7 @@ const express = require("express");
 const cookieParser = require('cookie-parser');
 const cors = require("cors");
 const app = express();
-const PORT = 8080;
+const PORT = 8080 || process.env.SERVER_PORT;
 
 // routes
 const phraseRoutes = require("./routes/phraseRoutes");
@@ -45,5 +45,5 @@ app.use((err, req, res, next) => {
 
 // Listening for connections
 app.listen(PORT, () => {
-    console.log(`Unyama upo kwenye PORT ${PORT}`);
+    console.log(`Server running on PORT ${PORT} 🎉`);
 });

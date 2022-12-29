@@ -11,6 +11,7 @@ exports.authenticateCredentials = async (req, res, next) => {
       res.status(400).json({ errors: errors.array() });
     }else{
         const { email } = req.body;
+
         // GET user by email & password
         const byEmailResult = await prisma.user.findFirst({
             where: {
@@ -33,7 +34,7 @@ exports.authenticateCredentials = async (req, res, next) => {
 
                 res.status(200).json({ accessToken: accessToken })
             }else{
-                res.status(400).json({ access: false });
+                res.status(400).json({ err });
             }
         });
     }

@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const cors = require("cors");
 const app = express();
 const PORT = 8080 || process.env.SERVER_PORT;
+const ROOT_PATH = require("./version/version");
 
 // routes
 const phraseRoutes = require("./routes/phraseRoutes");
@@ -17,14 +18,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// API Versioning
-const VERSION = "v1"; // API version
-const ROOT = `/api/${VERSION}`; // Root endpoint
-
 // Redirect Endpoints
-app.use(`${ROOT}/phrases`, phraseRoutes);
-app.use(`${ROOT}/tags`, tagRoutes);
-app.use(`${ROOT}/users`, userRoutes);
+app.use(`${ROOT_PATH}/phrases`, phraseRoutes);
+app.use(`${ROOT_PATH}/tags`, tagRoutes);
+app.use(`${ROOT_PATH}/users`, userRoutes);
 app.all("*", (req, res, next) => {
   const err = new Error("URL not found!");
   err.statusCode = 404;

@@ -3,6 +3,8 @@ const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+const { refreshTokens, generateAccessToken } = require("./tokenControllers");
+
 exports.authenticateCredentials = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -30,10 +32,10 @@ exports.authenticateCredentials = async (req, res, next) => {
         if (result) {
           // Serialize user with JSON Web Tokens
           const user = { email: email };
-          const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: "30s",
-          });
+          const accessToken = generateAccessToken(user);
           const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
+          
+          refreshTokens.push(refreshToken);
 
           res
             .status(200)

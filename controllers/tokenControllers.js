@@ -44,6 +44,6 @@ exports.deleteToken = async (req, res, next) => {
 
 exports.generateAccessToken = (user) => {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "30s",
+    expiresIn: "30m",
   });
 };
